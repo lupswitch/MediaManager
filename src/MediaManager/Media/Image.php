@@ -1,10 +1,10 @@
 <?php
-namespace MediaManager\Media\Image;
+namespace MediaManager\Media;
 
-use MediaManager\Media\Media\Media;
+use MediaManager\Media\Media;
 
 class Image extends Media {
-    public function getDimensions() {
-
+    public function __construct($file) {
+        parent::__construct($file);
     }
 }

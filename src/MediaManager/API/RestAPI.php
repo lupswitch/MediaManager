@@ -1,22 +1,33 @@
 <?php
-namespace MediaManager\API\RestAPI;
+namespace MediaManager\API;
 
-use MediaManager\Media\MediaFactory\MediaFactory;
-use MediaManager\Meta\Info\Info;
+use MediaManager\Media\MediaFactory;
+use MediaManager\Media\MediaManager;
 
 class RestAPI {
     private $request;
 
     public function __construct($request) {
-        $this->metaInfo = new Info();
         $this->request = $request;
     }
 
+    private function getMediaManager() {
+        //TODO:Inject a few dependencies here later
+        return new MediaManager();
+    }
+
+    private function okResponse($responseData = '') {
+        header('HTTP/1.1 200 OK');
+        if ($responseData) {
+            header('Content-type: application/json');
+            echo $responseData;
+        }
+    }
+
     public function post($file) {
-        $media = MediaFactory::getMedia(MediaFactory::IMAGE, null);
-        $storage = StorageFactory::getStorage(StorageFactory::FILE, null);
-        $storage->persist($media);
-        $this->metaInfo->persist($media);
-        return $this->okResponse();
+        $mediaManager = $this->getMediaManager();
+        $metaInfo = $mediaManager->post($file);
+
+        return $this->okResponse(json_encode($metaInfo));
     }
 }

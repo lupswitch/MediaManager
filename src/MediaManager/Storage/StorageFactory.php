@@ -1,7 +1,7 @@
 <?php
-namespace MediaManager\Storage\StorageFactory;
+namespace MediaManager\Storage;
 
-use MediaManager\Storage\FileStorage\FileStorage;
+use MediaManager\Storage\FileStorage;
 
 class StorageFactory {
     const FILE = 'file';

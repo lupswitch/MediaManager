@@ -1,14 +1,14 @@
 <?php
-namespace MediaManager\Media\MediaFactory;
+namespace MediaManager\Media;
 
-use MediaManager\Media\Image\Image;
+use MediaManager\Media\Image;
 
 class MediaFactory {
     const IMAGE = 'image';
     const AUDIO = 'audio';
     const VIDEO = 'video';
 
-    public static function getMedia($type, $initData) {
+    public static function get($type, $initData) {
         return new Image($initData);
     }
 }
