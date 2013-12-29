@@ -2,17 +2,41 @@
 namespace MediaManager\Media;
 
 abstract class Media {
-    protected $file;
-    public function __construct($file) {
-        $this->file = $file;
+    protected $name;
+    protected $tempName;
+    protected $size;
+    protected $mime;
+
+    protected function __construct($file) {
+        $this->name = $file['name'];
+        $this->tempName = $file['tmp_name'];
+        $this->size = $file['size'];
+        $this->mime = $file['type'];
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getExtension() {
+        $nameArr = explode('.', $this->getName());
+        return end($nameArr);
     }
 
     public function getTempLocation() {
-        return $this->file['tmp_name'];
+        return $this->tempName;
+    }
+
+    public function getMime() {
+        return $this->mime;
+    }
+
+    public function getSize() {
+        return $this->size;
     }
 
     public function getHash() {
         //TODO:
-        return $this->file['name'];
+        return $this->name;
     }
 }
