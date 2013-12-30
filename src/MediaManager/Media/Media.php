@@ -39,4 +39,6 @@ abstract class Media {
         //TODO:
         return $this->name;
     }
+
+    //abstract public function getDimensions();
 }

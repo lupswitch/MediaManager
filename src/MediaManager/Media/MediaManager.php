@@ -1,16 +1,15 @@
 <?php
 namespace MediaManager\Media;
 
+use MediaManager\Misc\Factory;
 use MediaManager\Exceptions\BadRequestException;
 use MediaManager\Storage\StorageFactory;
 
 class MediaManager {
     private $config;
-    private $metaInfo;
 
-    public function __construct($config, $metaInfo) {
+    public function __construct($config) {
         $this->config = $config;
-        $this->metaInfo = $metaInfo;
     }
 
     private function isValidMedia(Media $media) {
@@ -36,15 +35,15 @@ class MediaManager {
     }
 
     public function post($file) {
-        $media = MediaFactory::get($file);
+        $media = Factory::getInstance()->getMedia($file);
         if ($this->isValidMedia($media)) {
             $storage = StorageFactory::get(StorageFactory::FILE, null);
             $storage->persist($media);
-            //$metaInfo = $this->metaInfo->persist($media);
-            return true;
+            $metaAccessObject = Factory::getInstance()->getMetaAccessObject();
+            $metaInfo = $metaAccessObject->putInfo($media);
         } else {
             throw new BadRequestException('Invalid Request');
         }
-        return $metaInfo;
+        return $metaInfo->toArray();
     }
 }

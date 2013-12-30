@@ -1,13 +1,19 @@
 <?php
 namespace MediaManager\Misc;
 
+use MediaManager\Exceptions\BadRequestException;
+use MediaManager\Media\Image;
 use MediaManager\Media\MediaManager;
 use MediaManager\Meta\DBAccessObject;
+use MediaManager\Meta\Info;
 
 class Factory {
     private static $instance;
     private $configPath;
     private $config;
+    const IMAGE = 'image';
+    const AUDIO = 'audio';
+    const VIDEO = 'video';
 
     private function __construct() {
         $this->configPath = PROJECT_BASE_DIR . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR,['config','config.yml']);
@@ -31,13 +37,31 @@ class Factory {
         return new \PDO('mysql:host=' . $dbParams['host'] . ';dbname=' . $dbParams['dbname'], $dbParams['user'], $dbParams['pwd']);
     }
 
-    private function getMetaAccessObject() {
+    public  function getMetaAccessObject() {
         //TODO: Add more options later
         //$accessObjectType = $this->config->get('meta','access_type') ? : 'db';
         return new DBAccessObject($this->getDbConnection());
     }
 
     public function getMediaManager() {
-        return new MediaManager($this->getConfig(), $this->getMetaAccessObject());
+        return new MediaManager($this->getConfig());
+    }
+
+    public function getMedia($initData) {
+        $mediaType = explode('/', $initData['type'])[0];
+        if ($mediaType == self::IMAGE) {
+            $media = new Image($initData);
+        } else if ($mediaType == self::AUDIO) {
+            $media =  new Audio($initData);
+        } else if ($mediaType == self::VIDEO) {
+            $media = new Video($initData);
+        } else {
+            throw new BadRequestException('Invalid media type');
+        }
+        return $media;
+    }
+
+    public function getMetaInfo() {
+        return new Info();
     }
 }
