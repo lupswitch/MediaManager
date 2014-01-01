@@ -1,17 +1,13 @@
 <?php
 namespace MediaManager\API;
 
+use MediaManager\Exceptions\BadRequestException;
+use MediaManager\Exceptions\UnAuthorizedException;
+use MediaManager\Misc\Authentication;
 use MediaManager\Misc\Factory;
 use MediaManager\Media\MediaFactory;
-use MediaManager\Media\MediaManager;
 
 class RestAPI {
-    private $request;
-
-    public function __construct($request) {
-        $this->request = $request;
-    }
-
     private function okResponse($responseData = '') {
         header('HTTP/1.1 200 OK');
         if ($responseData) {
@@ -20,10 +16,27 @@ class RestAPI {
         }
     }
 
-    public function post($file) {
-        $mediaManager = Factory::getInstance()->getMediaManager();
-        $metaInfo = $mediaManager->post($file);
+    public function get($hash) {
+        if (! $hash) {
+            throw new BadRequestException('Missing Required parameters');
+        }
+        if (Authentication::getInstance()->isAuthenticated()) {
+            $mediaManager = Factory::getInstance()->getMediaManager();
+            $metaInfo = $mediaManager->get($hash);
+            return $this->okResponse(json_encode($metaInfo));
+        } else {
+            throw new UnAuthorizedException('User unauthorized!');
+        }
+    }
 
-        return $this->okResponse(json_encode($metaInfo));
+    public function post($file) {
+        if (Authentication::getInstance()->isAuthenticated()) {
+            $mediaManager = Factory::getInstance()->getMediaManager();
+            $metaInfo = $mediaManager->post($file);
+            return $this->okResponse(json_encode($metaInfo));
+        } else {
+            throw new UnAuthorizedException('User unauthorized!');
+        }
+
     }
 }

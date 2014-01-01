@@ -15,4 +15,9 @@ class Image extends Media {
     public function getType() {
         return self::TYPE;
     }
+
+    public function getDimensions() {
+        $dimensions = getimagesize($this->getTempLocation());
+        return json_encode(['w'=> $dimensions[0], 'h' => $dimensions[1]]);
+    }
 }

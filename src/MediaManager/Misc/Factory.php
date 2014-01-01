@@ -2,10 +2,13 @@
 namespace MediaManager\Misc;
 
 use MediaManager\Exceptions\BadRequestException;
+use MediaManager\Media\Audio;
 use MediaManager\Media\Image;
 use MediaManager\Media\MediaManager;
+use MediaManager\Media\Video;
 use MediaManager\Meta\DBAccessObject;
 use MediaManager\Meta\Info;
+use MediaManager\Storage\FileStorage;
 
 class Factory {
     private static $instance;
@@ -63,5 +66,10 @@ class Factory {
 
     public function getMetaInfo() {
         return new Info();
+    }
+
+    /*@return FileStorage */
+    public function getStorage() {
+        return new FileStorage($this->getConfig());
     }
 }

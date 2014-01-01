@@ -12,6 +12,10 @@ class MediaManager {
         $this->config = $config;
     }
 
+    public function get($hash) {
+         return Factory::getInstance()->getMetaAccessObject()->getInfo($hash)->toArray();
+    }
+
     private function isValidMedia(Media $media) {
         $invalidName = ['.', '..'];
         $validMimeType = $this->config->get('media', [$media->getConfigSection(), 'mime']);
@@ -37,9 +41,9 @@ class MediaManager {
     public function post($file) {
         $media = Factory::getInstance()->getMedia($file);
         if ($this->isValidMedia($media)) {
-            $storage = StorageFactory::get(StorageFactory::FILE, null);
-            $storage->persist($media);
+            $storage = Factory::getInstance()->getStorage();
             $metaAccessObject = Factory::getInstance()->getMetaAccessObject();
+            $storage->persist($media);
             $metaInfo = $metaAccessObject->putInfo($media);
         } else {
             throw new BadRequestException('Invalid Request');

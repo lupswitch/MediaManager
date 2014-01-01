@@ -1,6 +1,8 @@
 <?php
 namespace MediaManager\Media;
 
+use MediaManager\Misc\Authentication;
+
 abstract class Media {
     protected $name;
     protected $tempName;
@@ -15,7 +17,7 @@ abstract class Media {
     }
 
     public function getName() {
-        return $this->name;
+        return urlencode($this->name);
     }
 
     public function getExtension() {
@@ -36,9 +38,9 @@ abstract class Media {
     }
 
     public function getHash() {
-        //TODO:
-        return $this->name;
+        $userId = Authentication::getInstance()->getUserId();
+        return md5($userId . md5_file($this->getTempLocation()));
     }
 
-    //abstract public function getDimensions();
+    abstract public function getDimensions();
 }
