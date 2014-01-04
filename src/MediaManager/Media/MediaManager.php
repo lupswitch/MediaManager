@@ -43,7 +43,10 @@ class MediaManager {
         if ($this->isValidMedia($media)) {
             $storage = Factory::getInstance()->getStorage();
             $metaAccessObject = Factory::getInstance()->getMetaAccessObject();
+            $viewGenerator = Factory::getInstance()->getViewGenerator();
             $storage->persist($media);
+            $view = $viewGenerator->generateView($media);
+            $storage->persistView($view, $media);
             $metaInfo = $metaAccessObject->putInfo($media);
         } else {
             throw new BadRequestException('Invalid Request');

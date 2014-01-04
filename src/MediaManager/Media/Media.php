@@ -17,7 +17,7 @@ abstract class Media {
     }
 
     public function getName() {
-        return urlencode($this->name);
+        return rawurlencode($this->name);
     }
 
     public function getExtension() {
@@ -42,5 +42,7 @@ abstract class Media {
         return md5($userId . md5_file($this->getTempLocation()));
     }
 
+    abstract public function getType();
+    abstract public function getConfigSection();
     abstract public function getDimensions();
 }

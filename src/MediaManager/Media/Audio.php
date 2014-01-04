@@ -1,6 +1,8 @@
 <?php
 namespace MediaManager\Media;
 
+use MediaManager\Misc\Factory;
+
 class Audio extends Media {
     const TYPE = 'audio';
 
@@ -17,6 +19,14 @@ class Audio extends Media {
     }
 
     public function getDimensions() {
-        return '{}';
+        /** @var  $ffmpeg FFMpeg*/
+        $ffmpeg = Factory::getInstance()->getFFMpegInstance();
+        $media = $ffmpeg->open($this->getTempLocation());
+        $data = $media->getFormat()->all();
+        $dimension = [
+            'length'=>number_format($data['duration'], 2, '.', ','),
+            'bitrate'=>number_format($data['bit_rate'], 2, '.', ',')
+        ];
+        return $dimension;
     }
 }

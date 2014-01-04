@@ -1,6 +1,7 @@
 <?php
 namespace MediaManager\Misc;
 
+use FFMpeg\FFMpeg;
 use MediaManager\Exceptions\BadRequestException;
 use MediaManager\Media\Audio;
 use MediaManager\Media\Image;
@@ -9,6 +10,7 @@ use MediaManager\Media\Video;
 use MediaManager\Meta\DBAccessObject;
 use MediaManager\Meta\Info;
 use MediaManager\Storage\FileStorage;
+use MediaManager\View\Generator;
 
 class Factory {
     private static $instance;
@@ -71,5 +73,15 @@ class Factory {
     /*@return FileStorage */
     public function getStorage() {
         return new FileStorage($this->getConfig());
+    }
+
+    /*@return FFMPeg*/
+    public function getFFMpegInstance() {
+        return FFMpeg::create();
+    }
+
+    /*@return Generator*/
+    public function getViewGenerator() {
+        return new Generator($this->getConfig());
     }
 }

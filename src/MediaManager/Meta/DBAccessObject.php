@@ -42,7 +42,7 @@ class DBAccessObject extends AccessObject {
         $stmt = $this->dbConn->prepare($query);
         $stmt->bindValue(':name',$info->getName());
         $stmt->bindValue(':type',$info->getType());
-        $stmt->bindValue(':dimensions',$info->getDimensions());
+        $stmt->bindValue(':dimensions',json_encode($info->getDimensions()));
         $stmt->bindValue(':hash',$info->getHash());
         $stmt->bindValue(':userId',$info->getUserId());
         $stmt->execute();

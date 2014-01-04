@@ -24,4 +24,14 @@ class FileStorage extends Storage {
         $persistLocation = $this->getAbsStorageLocation($media->getHash());
         return copy($media->getTempLocation(), $persistLocation);
     }
+
+    public function persistView($view,Media $media) {
+        $status  = false;
+        $persistLocation = $this->getAbsStorageLocation('_' . $media->getHash());
+        if (is_resource($view) && get_resource_type($view) == 'gd') {
+            $status = imagejpeg($view, $persistLocation);
+            imagedestroy($view);
+        }
+        return $status;
+    }
 }

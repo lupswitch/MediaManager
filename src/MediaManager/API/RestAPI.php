@@ -29,6 +29,19 @@ class RestAPI {
         }
     }
 
+    public function getPreview($hash) {
+        if (! $hash) {
+            throw new BadRequestException('Missing Required parameters');
+        }
+        if (Authentication::getInstance()->isAuthenticated()) {
+            $mediaManager = Factory::getInstance()->getMediaManagaer();
+            $preview = $mediaManager->getPreview($hash);
+            return $this->okResponse($preview);
+        } else {
+            throw new UnAuthorizedException('User unauthorized');
+        }
+    }
+
     public function post($file) {
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
