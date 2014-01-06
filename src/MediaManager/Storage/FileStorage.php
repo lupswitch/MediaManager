@@ -11,12 +11,24 @@ class FileStorage extends Storage {
         $this->config = $config;
     }
 
-    private function getAbsStorageLocation($hash) {
+    public function getTempStorageLocation() {
+        $location = $this->config->get('storage',['file','tmp_location']);
+        if (! (is_dir($location) && is_writable($location))) {
+            throw new StorageException('Storage not Accessible');
+        }
+        return $location;
+    }
+
+    private function getStorageLocation() {
         $location = $this->config->get('storage',['file','location']);
         if (! (is_dir($location) && is_writable($location))) {
             throw new StorageException('Storage not Accessible');
         }
+        return $location;
+    }
 
+    private function getAbsStorageLocation($hash) {
+        $location = $this->getStorageLocation();
         return $location . DIRECTORY_SEPARATOR . $hash;
     }
 

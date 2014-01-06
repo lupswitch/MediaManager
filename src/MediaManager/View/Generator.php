@@ -1,11 +1,14 @@
 <?php
 namespace MediaManager\View;
 
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
 use MediaManager\Media\Audio;
 use MediaManager\Media\Image;
 use MediaManager\Media\Media;
 use MediaManager\Media\Video;
 use MediaManager\Misc\Config;
+use MediaManager\Misc\Factory;
 
 class Generator {
     private $config;
@@ -14,7 +17,23 @@ class Generator {
     }
 
     private function generateVideoView(Media $media) {
+        $ffmpeg = Factory::getInstance()->getFFMpegInstance();
+        $video = $ffmpeg->open($media->getTempLocation());
+        $frameShot = $this->config->get('view', [$media->getConfigSection(), 'frametime']);
+        $tmpLocation = Factory::getInstance()->getStorage()->getTempStorageLocation() . DIRECTORY_SEPARATOR .
+                $media->getHash() . 'tmp.jpeg' ;
+        $video->frame(TimeCode::fromSeconds((int)$frameShot))->save($tmpLocation, true);
 
+        $viewDimensions = $this->config->get('view', [$media->getConfigSection(),'dimensions']);
+        $view = imagecreatetruecolor($viewDimensions['width'], $viewDimensions['height']);
+        $mediaResource = imagecreatefromstring(file_get_contents($tmpLocation));
+        $mediaDimensions = getimagesize($tmpLocation);
+        imagecopyresized(
+            $view, $mediaResource, 0, 0, 0, 0, $viewDimensions['width'],$viewDimensions['height'], $mediaDimensions[0],
+            $mediaDimensions[1]
+        );
+        unlink ($tmpLocation);
+        return $view;
     }
 
     private function generateImageView(Media $media) {
