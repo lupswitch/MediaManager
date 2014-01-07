@@ -48,8 +48,16 @@ class Generator {
         return $view;
     }
 
-    private function generateAudioView() {
-        return [];
+    private function generateAudioView(Media $media) {
+        $viewDimensions = $this->config->get('view', [$media->getConfigSection(),'dimensions']);
+        $view = imagecreate($viewDimensions['width'], $viewDimensions['height']);
+        $bg = imagecolorallocate($view, 255, 255, 255);
+        $textcolor = imagecolorallocate($view, 0, 0, 255);
+        //TODO:Position text as per view dimensions
+        imagestring($view, 1, 5, 5, substr($media->getRealName(),0,15), $textcolor);
+        imagestring($view, 1, 5, 15,implode('  ',$media->getDimensions()), $textcolor);
+
+        return $view;
     }
 
     public function generateView(Media $media) {

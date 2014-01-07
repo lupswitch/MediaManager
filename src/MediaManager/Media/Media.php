@@ -20,6 +20,10 @@ abstract class Media {
         return rawurlencode($this->name);
     }
 
+    public function getRealName() {
+        return $this->name;
+    }
+
     public function getExtension() {
         $nameArr = explode('.', $this->getName());
         return end($nameArr);
