@@ -17,7 +17,7 @@ class MediaManager {
         if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
             return $metaInfo->toArray();
         } else {
-            throw new NoContentException('Media not Found');
+            throw new NoContentException();
         }
     }
 
@@ -48,6 +48,9 @@ class MediaManager {
         if ($this->isValidMedia($media)) {
             $storage = Factory::getInstance()->getStorage();
             $metaAccessObject = Factory::getInstance()->getMetaAccessObject();
+            if ($metaAccessObject->getInfo($media->getHash())) {
+                throw new BadRequestException('Media already exists');
+            }
             $viewGenerator = Factory::getInstance()->getViewGenerator();
             $storage->persist($media);
             $view = $viewGenerator->generateView($media);
