@@ -20,9 +20,11 @@ class DBAccessObject extends AccessObject {
         $stmt->execute();
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        /** @var  $info Info*/
-        $info = Factory::getInstance()->getMetaInfo();
+
+        $info = null;
         if ($result) {
+            /** @var  $info Info*/
+            $info = Factory::getInstance()->getMetaInfo();
             $info->setName($result['name'])->setType($result['type'])->setDimensions($result['dimensions'])
                 ->setHash($result['hash'])->setUserId($result['userId']);
         }

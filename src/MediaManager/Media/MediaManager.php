@@ -1,6 +1,7 @@
 <?php
 namespace MediaManager\Media;
 
+use MediaManager\Exceptions\NoContentException;
 use MediaManager\Misc\Factory;
 use MediaManager\Exceptions\BadRequestException;
 use MediaManager\Storage\StorageFactory;
@@ -13,7 +14,11 @@ class MediaManager {
     }
 
     public function get($hash) {
-         return Factory::getInstance()->getMetaAccessObject()->getInfo($hash)->toArray();
+        if($info = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
+            return $info->toArray();
+        } else {
+            throw new NoContentException('Media not Found');
+        }
     }
 
     private function isValidMedia(Media $media) {
