@@ -6,6 +6,7 @@ use MediaManager\Exceptions\UnAuthorizedException;
 use MediaManager\Misc\Authentication;
 use MediaManager\Misc\Factory;
 use MediaManager\Media\MediaFactory;
+use MediaManager\Response\JsonResponse;
 
 class RestAPI {
     private function okResponse($responseData = '') {
@@ -23,7 +24,7 @@ class RestAPI {
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
             $metaInfo = $mediaManager->get($hash);
-            return $this->okResponse(json_encode($metaInfo));
+            return new JsonResponse($metaInfo);
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }
@@ -46,7 +47,7 @@ class RestAPI {
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
             $metaInfo = $mediaManager->post($file);
-            return $this->okResponse(json_encode($metaInfo));
+            return new JsonResponse($metaInfo);
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }

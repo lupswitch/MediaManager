@@ -14,8 +14,8 @@ class MediaManager {
     }
 
     public function get($hash) {
-        if($info = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
-            return $info->toArray();
+        if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
+            return $metaInfo->toArray();
         } else {
             throw new NoContentException('Media not Found');
         }

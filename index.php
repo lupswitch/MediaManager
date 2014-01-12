@@ -16,13 +16,12 @@ try {
         if ($_FILES['file']['error']) {
             throw new \MediaManager\Exceptions\BadRequestException('File upload error');
         }
-        $mediaManagerAPI->post($_FILES['file']);
+        $response = $mediaManagerAPI->post($_FILES['file']);
     } else if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $hash = $request['hash'];
-        $mediaManagerAPI->get($hash);
+        $response = $mediaManagerAPI->get($hash);
     }
 } catch (\MediaManager\Exceptions\MediaManagerException $e) {
-    echo 'Uncaught Exception OOPS' . $e->getMessage(); die;
-   MediaManager\Exception\Handler::getExceptionResponse($e);
+    $response = new \MediaManager\Response\ExceptionResponse($e);
 }
-
+$response->respond();
