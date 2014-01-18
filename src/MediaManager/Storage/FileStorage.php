@@ -33,6 +33,19 @@ class FileStorage extends Storage {
         return $location . DIRECTORY_SEPARATOR . $hash;
     }
 
+    public function getMedia($hash) {
+        //TODO:Refine name generation later
+        $prefix = '';
+        $location = $this->config->get('storage',['file','location']);
+        $mediaPath = $location . DIRECTORY_SEPARATOR . $prefix . $hash;
+        if (file_exists($mediaPath)) {
+            $media = base64_encode(file_get_contents($mediaPath));
+        } else {
+            throw new NoContentException();
+        }
+        return $media;
+    }
+
     public function getView($hash) {
         //TODO:Refine name generation later
         $prefix = '_';

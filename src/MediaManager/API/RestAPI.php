@@ -18,14 +18,27 @@ class RestAPI {
         }
     }
 
-    public function get($hash) {
+    public function getMeta($hash) {
         if (! $hash) {
             throw new BadRequestException('Missing Required parameters');
         }
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
-            $metaInfo = $mediaManager->get($hash);
+            $metaInfo = $mediaManager->getMeta($hash);
             return new JsonResponse($metaInfo);
+        } else {
+            throw new UnAuthorizedException('User unauthorized!');
+        }
+    }
+
+    public function getMedia($hash) {
+        if (! $hash) {
+            throw new BadRequestException('Missing Required parameters');
+        }
+        if (Authentication::getInstance()->isAuthenticated()) {
+            $mediaManager = Factory::getInstance()->getMediaManager();
+            $media = $mediaManager->getMedia($hash);
+            return new OkResponse($media);
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }

@@ -13,9 +13,19 @@ class MediaManager {
         $this->config = $config;
     }
 
-    public function get($hash) {
+    public function getMeta($hash) {
         if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
             return $metaInfo->toArray();
+        } else {
+            throw new NoContentException();
+        }
+    }
+
+    public function getMedia($hash) {
+        if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
+            $storage = Factory::getInstance()->getStorage();
+            $mediaEncoded = $storage->getMedia($hash);
+            return $mediaEncoded;
         } else {
             throw new NoContentException();
         }
@@ -24,8 +34,8 @@ class MediaManager {
     public function getPreview($hash) {
         if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
             $storage = Factory::getInstance()->getStorage();
-            $view = $storage->getView($hash);
-            return $view;
+            $viewEncoded = $storage->getView($hash);
+            return $viewEncoded;
         } else {
             throw new NoContentException();
         }
