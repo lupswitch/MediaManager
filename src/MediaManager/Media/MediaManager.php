@@ -21,6 +21,16 @@ class MediaManager {
         }
     }
 
+    public function getPreview($hash) {
+        if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
+            $storage = Factory::getInstance()->getStorage();
+            $view = $storage->getView($hash);
+            return $view;
+        } else {
+            throw new NoContentException();
+        }
+    }
+
     private function isValidMedia(Media $media) {
         $invalidName = ['.', '..'];
         $validMimeType = $this->config->get('media', [$media->getConfigSection(), 'mime']);

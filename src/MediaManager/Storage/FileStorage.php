@@ -1,6 +1,7 @@
 <?php
 namespace MediaManager\Storage;
 
+use MediaManager\Exceptions\NoContentException;
 use MediaManager\Exceptions\StorageException;
 use MediaManager\Media\Media;
 use MediaManager\Misc\Config;
@@ -30,6 +31,19 @@ class FileStorage extends Storage {
     private function getAbsStorageLocation($hash) {
         $location = $this->getStorageLocation();
         return $location . DIRECTORY_SEPARATOR . $hash;
+    }
+
+    public function getView($hash) {
+        //TODO:Refine name generation later
+        $prefix = '_';
+        $location = $this->config->get('storage',['file','location']);
+        $viewPath = $location . DIRECTORY_SEPARATOR . $prefix . $hash;
+        if (file_exists($viewPath)) {
+            $view = base64_encode(file_get_contents($viewPath));
+        } else {
+            throw new NoContentException();
+        }
+        return $view;
     }
 
     public function persist(Media $media) {

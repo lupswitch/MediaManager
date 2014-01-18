@@ -7,6 +7,7 @@ use MediaManager\Misc\Authentication;
 use MediaManager\Misc\Factory;
 use MediaManager\Media\MediaFactory;
 use MediaManager\Response\JsonResponse;
+use MediaManager\Response\OkResponse;
 
 class RestAPI {
     private function okResponse($responseData = '') {
@@ -35,9 +36,9 @@ class RestAPI {
             throw new BadRequestException('Missing Required parameters');
         }
         if (Authentication::getInstance()->isAuthenticated()) {
-            $mediaManager = Factory::getInstance()->getMediaManagaer();
+            $mediaManager = Factory::getInstance()->getMediaManager();
             $preview = $mediaManager->getPreview($hash);
-            return $this->okResponse($preview);
+            return new OkResponse($preview);
         } else {
             throw new UnAuthorizedException('User unauthorized');
         }
