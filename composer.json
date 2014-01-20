@@ -4,6 +4,7 @@
     },
 	"require" : {
 		"symfony/yaml" : "2.1.*@dev",
-		"php-ffmpeg/php-ffmpeg": "~0.4"
+		"php-ffmpeg/php-ffmpeg": "~0.4",
+        "corneltek/pux": "~1.3"
 	}
 }

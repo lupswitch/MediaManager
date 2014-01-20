@@ -58,6 +58,9 @@ class RestAPI {
     }
 
     public function post($file) {
+        if ($file['error']) {
+            throw new \MediaManager\Exceptions\BadRequestException('File upload error');
+        }
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
             $metaInfo = $mediaManager->post($file);
