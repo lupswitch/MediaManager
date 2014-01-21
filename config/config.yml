@@ -1,0 +1,37 @@
+media:
+  image:
+    mime: ['image/jpeg']
+    extn: ['jpg', 'jpeg']
+    size: 2097152
+  audio:
+    mime: ['audio/mp3','audio/mp4']
+    extn: ['mp3', 'mp4']
+    size: 5342880
+  video:
+    mime: ['video/x-flv']
+    extn: ['flv']
+    size: 10485760
+
+db:
+  user:   **DB USERNAME**
+  pwd:    **DB PASSWORD**
+  host:   **DB HOST**
+  dbname: **DB NAME**
+
+storage:
+  type:    file
+  file:
+    location:  **LOCATION**
+    tmp_location: **LOCATION FOR TMP MOVE**
+
+view:
+  image:
+    media: 'image'
+    dimensions: {width:'80px', height:'80px'}
+  video:
+    media: 'image'
+    dimensions: {width:'80px', height:'80px'}
+    frametime:  '1'
+  audio:
+      media: 'image'
+      dimensions: {width:'80px', height:'80px'}
