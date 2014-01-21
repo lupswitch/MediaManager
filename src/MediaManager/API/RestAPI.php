@@ -8,6 +8,7 @@ use MediaManager\Misc\Factory;
 use MediaManager\Media\MediaFactory;
 use MediaManager\Response\JsonResponse;
 use MediaManager\Response\OkResponse;
+use MediaManager\Meta\Info;
 
 class RestAPI {
     private function okResponse($responseData = '') {
@@ -24,8 +25,9 @@ class RestAPI {
         }
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
+            /** @var  $metaInfo Info*/
             $metaInfo = $mediaManager->getMeta($hash);
-            return new JsonResponse($metaInfo);
+            return new JsonResponse($metaInfo->toArray());
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }
@@ -38,7 +40,11 @@ class RestAPI {
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
             $media = $mediaManager->getMedia($hash);
-            return new OkResponse($media);
+            /** @var  $metaInfo Info*/
+            $metaInfo = $mediaManager->getMeta($hash);
+            $response = new OkResponse($media);
+            $response->addHeader('Content-type: ' . $metaInfo->getMime());
+            return $response;
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }
@@ -51,7 +57,11 @@ class RestAPI {
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
             $preview = $mediaManager->getPreview($hash);
-            return new OkResponse($preview);
+            /** @var  $metaInfo Info*/
+            $metaInfo = $mediaManager->getMeta($hash);
+            $response = new OkResponse($preview);
+            $response->addHeader('Content-type: ' . $metaInfo->getMime());
+            return $response;
         } else {
             throw new UnAuthorizedException('User unauthorized');
         }
@@ -63,8 +73,9 @@ class RestAPI {
         }
         if (Authentication::getInstance()->isAuthenticated()) {
             $mediaManager = Factory::getInstance()->getMediaManager();
+            /** @var  $metaInfo Info*/
             $metaInfo = $mediaManager->post($file);
-            return new JsonResponse($metaInfo);
+            return new JsonResponse($metaInfo->toArray());
         } else {
             throw new UnAuthorizedException('User unauthorized!');
         }

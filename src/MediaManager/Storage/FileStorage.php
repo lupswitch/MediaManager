@@ -39,7 +39,7 @@ class FileStorage extends Storage {
         $location = $this->config->get('storage',['file','location']);
         $mediaPath = $location . DIRECTORY_SEPARATOR . $prefix . $hash;
         if (file_exists($mediaPath)) {
-            $media = base64_encode(file_get_contents($mediaPath));
+            $media = file_get_contents($mediaPath);
         } else {
             throw new NoContentException();
         }
@@ -52,7 +52,7 @@ class FileStorage extends Storage {
         $location = $this->config->get('storage',['file','location']);
         $viewPath = $location . DIRECTORY_SEPARATOR . $prefix . $hash;
         if (file_exists($viewPath)) {
-            $view = base64_encode(file_get_contents($viewPath));
+            $view = file_get_contents($viewPath);
         } else {
             throw new NoContentException();
         }

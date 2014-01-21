@@ -26,7 +26,7 @@ class DBAccessObject extends AccessObject {
             /** @var  $info Info*/
             $info = Factory::getInstance()->getMetaInfo();
             $info->setName($result['name'])->setType($result['type'])->setDimensions($result['dimensions'])
-                ->setHash($result['hash'])->setUserId($result['userId']);
+                ->setHash($result['hash'])->setUserId($result['userId'])->setMime($result['mime']);
         }
         return $info;
     }
@@ -34,19 +34,20 @@ class DBAccessObject extends AccessObject {
     private function getInfoFromMedia(Media $media) {
         $info = Factory::getInstance()->getMetaInfo();
         $info->setName($media->getName())->setType($media->getType())->setDimensions($media->getDimensions())
-            ->setHash($media->getHash())->setUserId(Authentication::getInstance()->getUserId());
+            ->setHash($media->getHash())->setUserId(Authentication::getInstance()->getUserId())->setMime($media->getMime());
         return $info;
     }
 
     public function putInfo(Media $media) {
         $info = $this->getInfoFromMedia($media);
-        $query = 'INSERT INTO meta(name, type,dimensions, hash, userId) VALUES(:name, :type, :dimensions, :hash, :userId)';
+        $query = 'INSERT INTO meta(name, type,dimensions, hash, userId, mime) VALUES(:name, :type, :dimensions, :hash, :userId, :mimeType)';
         $stmt = $this->dbConn->prepare($query);
         $stmt->bindValue(':name',$info->getName());
         $stmt->bindValue(':type',$info->getType());
         $stmt->bindValue(':dimensions',json_encode($info->getDimensions()));
         $stmt->bindValue(':hash',$info->getHash());
         $stmt->bindValue(':userId',$info->getUserId());
+        $stmt->bindValue(':mimeType',$info->getMime());
         $stmt->execute();
 
         return $info;

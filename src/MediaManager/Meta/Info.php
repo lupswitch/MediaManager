@@ -7,6 +7,7 @@ class Info {
     private $dimensions;
     private $hash;
     private $userId;
+    private $mime;
 
     public function setName($name) {
         $this->name = $name;
@@ -53,11 +54,20 @@ class Info {
         return $this->userId;
     }
 
+    public function setMime($mime) {
+        $this->mime = $mime;
+        return $this;
+    }
+
+    public function getMime() {
+        return $this->mime;
+    }
+
 
     public function toArray() {
         return [
             'name' => $this->getName(), 'type' => $this->getType(), 'dimensions'=> $this->getDimensions(),
-            'hash' => $this->getHash()
+            'mime' => $this->getMime(), 'hash' => $this->getHash()
         ];
     }
 }

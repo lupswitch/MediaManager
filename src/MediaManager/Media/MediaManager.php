@@ -15,7 +15,7 @@ class MediaManager {
 
     public function getMeta($hash) {
         if($metaInfo = Factory::getInstance()->getMetaAccessObject()->getInfo($hash)) {
-            return $metaInfo->toArray();
+            return $metaInfo;
         } else {
             throw new NoContentException();
         }
@@ -79,6 +79,6 @@ class MediaManager {
         } else {
             throw new BadRequestException('Invalid Request');
         }
-        return $metaInfo->toArray();
+        return $metaInfo;
     }
 }
